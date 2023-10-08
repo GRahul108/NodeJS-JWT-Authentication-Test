@@ -18,7 +18,6 @@ const port = 3000;
 const jwtmw = exjwt({
   secret: secretkey,
   algorithms: ["HS256"],
-
 });
 let users = [
   {
@@ -39,7 +38,7 @@ app.post("/api/login", (req, res) => {
       let token = jwt.sign(
         { id: user.id, username: user, username },
         secretkey,
-        { expiresIn: "30s" }
+        { expiresIn: "3min" }
       );
       res.json({
         success: true,
@@ -61,8 +60,7 @@ app.get("/api/dashboard", jwtmw, (req, res) => {
   res.json({
     success: true,
     myContent: "Secret Content that only log ppl can see",
-  }
-  );
+  });
 });
 
 app.get("/api/price", jwtmw, (req, res) => {
@@ -74,11 +72,9 @@ app.get("/api/price", jwtmw, (req, res) => {
 
 app.get("/api/settings", jwtmw, (req, res) => {
   res.json({
-  
     myContent: "This is settings Page",
   });
 });
-
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
