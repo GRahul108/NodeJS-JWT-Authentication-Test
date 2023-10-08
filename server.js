@@ -38,7 +38,7 @@ app.post("/api/login", (req, res) => {
       let token = jwt.sign(
         { id: user.id, username: user, username },
         secretkey,
-        { expiresIn: "3min" }
+        { expiresIn: "180s" }
       );
       res.json({
         success: true,
@@ -77,6 +77,9 @@ app.get("/api/settings", jwtmw, (req, res) => {
 });
 
 app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 

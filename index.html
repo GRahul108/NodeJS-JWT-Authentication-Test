@@ -26,7 +26,6 @@
       <div>
         <button onclick="login()">Login</button>
         <button onclick="getDashboard()">GetDashboard</button>
-        <button onclick="settings()">Settings</button>
       </div>
     </main>
   </div>
@@ -46,10 +45,7 @@
           localStorage.setItem("jwt", token);
           getDashboard();
         }
-        setTimeout(() => {
-          window.location.href = "/";
-          console.log("Homepage");
-        }, 180000);
+      
       });
     }
     function getDashboard() {
@@ -71,8 +67,14 @@
             buttonContainer.className = "settings";
             buttonContainer.appendChild(settingsButton);
             document.querySelector("main").appendChild(buttonContainer);
-
+            localStorage.setItem("currentPage", "dashboard");
             history.pushState(null, null, "http://localhost:3000/dashboard");
+            
+            setTimeout(() => {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem('currentPage')
+            window.location.href = "/";
+          }, 180000);
           }
         });
     }
@@ -88,12 +90,31 @@
         .then((res) => {
           document.querySelector("h1.row").innerHTML = "Settings";
           document.querySelector("main").innerHTML = res.data.myContent;
+          localStorage.setItem("currentPage", "settings");
           history.pushState(null, null, "http://localhost:3000/settings");
+        
           setTimeout(() => {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem('currentPage')
             window.location.href = "/";
           }, 180000);
+         
         });
+       
     }
+    function onLoad() {
+      const token = localStorage.getItem('jwt');
+      const currentPage = localStorage.getItem("currentPage");
+      
+      if (token) {
+        if (currentPage === "dashboard") {
+          getDashboard();
+        } else if (currentPage === "settings") {
+          settings();
+        }
+      }
+    }
+    window.onload = onLoad;
   </script>
 </body>
 
